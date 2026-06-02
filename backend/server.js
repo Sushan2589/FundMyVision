@@ -54,8 +54,10 @@ function adminOnly(req, res, next) {
 app.get("/signup", (req, res) => {
   res.send(`
     <form method="POST" action="/signup">
+      <input name="email" type="email" placeholder="Email">
       <input name="username" placeholder="Username">
       <input name="password" type="password" placeholder="Password">
+      
 
       <select name="role">
     <option value="ideator">Ideator</option>
@@ -90,13 +92,13 @@ app.get('/login', (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const { username, password, role } = req.body;
+  const { email, username, password, role } = req.body;
   console.log(req.body)
   const hash = await bcrypt.hash(password, 10);
 
   db.run(
-    "INSERT INTO users(username, password, role) VALUES (?, ?, ?)",
-    [username, hash, role],
+    "INSERT INTO users(email, username, password, role) VALUES (?, ?, ?, ?)",
+    [email, username, hash, role],
     function (err) {
       if (err) {
        console.log(err);
