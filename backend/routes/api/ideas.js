@@ -45,4 +45,15 @@ router.post("/create", isAuthenticated, (req, res) => {
   );
 });
 
+router.get("/", (req, res) => {
+  db.all("SELECT * FROM ideas", [], (err, rows) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+
+    res.json(rows);
+  });
+});
+
 module.exports = router;

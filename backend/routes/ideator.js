@@ -2,8 +2,7 @@ const router = require("express").Router();
 const path = require("path");
 const isAuthenticated = require("../middleware/auth");
 const ideatorOnly = require("../middleware/ideatorOnly");
-console.log(isAuthenticated);
-console.log(ideatorOnly);
+
 router.use(isAuthenticated);
 router.use(ideatorOnly);
 
