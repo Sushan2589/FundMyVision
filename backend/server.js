@@ -11,7 +11,8 @@ const adminOnly = require("./middleware/adminOnly")
 const sessiondataRoutes = require("./routes/api/sessionData");
 const ideasRoutes = require("./routes/api/ideas");
 const profileRoutes = require("./routes/api/profile");
-
+const interestsRoutes = require("./routes/api/interests");
+const investorRoutes = require("./routes/investor");
 
 const app = express();
 
@@ -141,12 +142,6 @@ res.redirect("/login");
 
 
 
-app.get("/investor/dashboard", isAuthenticated, investorOnly, (req, res) => {
-    res.send("Investor Dashboard");
-});
-
-
-
 app.get("/admin", isAuthenticated, adminOnly, (req, res) => {
     res.send("Admin Panel");
 });
@@ -158,8 +153,10 @@ app.get('/logout', (req, res) => {
 });
 
 app.use("/ideator", ideatorRoutes);
+app.use("/investor", investorRoutes);
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/interests", interestsRoutes);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
