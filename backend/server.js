@@ -2,9 +2,21 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const db = require("./db");
+const ideatorRoutes = require("./routes/ideator");
+const isAuthenticated = require("./middleware/auth");
+const ideatorOnly = require("./middleware/ideatorOnly");  
+const investorOnly = require("./middleware/investorOnly");
+const adminOnly = require("./middleware/adminOnly")
+
+const sessiondataRoutes = require("./routes/api/sessionData");
+const ideasRoutes = require("./routes/api/ideas");
+const profileRoutes = require("./routes/api/profile");
+
 
 const app = express();
 
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -15,6 +27,8 @@ app.use(
   })
 );
 
+app.use("/api/sessionData", sessiondataRoutes);
+
 // Example user
 const users = [
   {
@@ -23,33 +37,6 @@ const users = [
   },
 ];
 
-function isAuthenticated(req, res, next) {
-  if (req.session.user) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
-function investorOnly(req, res, next) {
-    if (req.session.user?.role === "investor") {
-        return next();
-    }
-    res.status(403).send("Access denied");
-}
-
-function ideatorOnly(req, res, next) {
-    if (req.session.user?.role === "ideator") {
-        return next();
-    }
-    res.status(403).send("Access denied");
-}
-
-function adminOnly(req, res, next) {
-    if (req.session.user?.role === "admin") {
-        return next();
-    }
-    res.status(403).send("Access denied");
-}
 
 app.get("/signup", (req, res) => {
   res.send(`
@@ -131,28 +118,34 @@ app.post("/login", (req, res) => {
       req.session.user = {
         id: user.id,
         username: user.username,
-        role: user.role
+        role: user.role,
+        email: user.email
       };
 
-      res.redirect("/dashboard");
+      if (user.role === "ideator") {
+  return res.redirect("/ideator/dashboard");
+}
+
+if (user.role === "investor") {
+  return res.redirect("/investor/dashboard");
+}
+
+if (user.role === "admin") {
+  return res.redirect("/admin/dashboard");
+}
+
+res.redirect("/login");
     }
   );
 });
 
-app.get('/dashboard', isAuthenticated, (req, res) => {
-  res.send(`
-    <h1>Welcome ${req.session.user.username}</h1>
-    <a href="/logout">Logout</a>
-  `);
-});
+
 
 app.get("/investor/dashboard", isAuthenticated, investorOnly, (req, res) => {
     res.send("Investor Dashboard");
 });
 
-app.get("/ideator/dashboard", isAuthenticated, ideatorOnly, (req, res) => {
-    res.send("Ideator Dashboard");
-});
+
 
 app.get("/admin", isAuthenticated, adminOnly, (req, res) => {
     res.send("Admin Panel");
@@ -163,6 +156,10 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
   });
 });
+
+app.use("/ideator", ideatorRoutes);
+app.use("/api/ideas", ideasRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
