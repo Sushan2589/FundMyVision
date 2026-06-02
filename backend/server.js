@@ -90,16 +90,17 @@ app.get('/login', (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
-
+  const { username, password, role } = req.body;
+  console.log(req.body)
   const hash = await bcrypt.hash(password, 10);
 
   db.run(
-    "INSERT INTO users(username, password, role) VALUES (?, ?)",
+    "INSERT INTO users(username, password, role) VALUES (?, ?, ?)",
     [username, hash, role],
     function (err) {
       if (err) {
-        return res.send("Username already exists");
+       console.log(err);
+    return res.send(err.message);
       }
 
       
