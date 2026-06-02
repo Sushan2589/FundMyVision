@@ -14,6 +14,7 @@ const profileRoutes = require("./routes/api/profile");
 const interestsRoutes = require("./routes/api/interests");
 const investorRoutes = require("./routes/investor");
 
+
 const app = express();
 
 
@@ -157,6 +158,7 @@ app.use("/investor", investorRoutes);
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/interests", interestsRoutes);
+
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
