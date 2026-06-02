@@ -1,0 +1,365 @@
+/* ============================================================
+   Dashboard Shared Styles (Ideator & Investor)
+   ============================================================ */
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-1);
+}
+
+.page-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+/* ── Stats Grid ───────────────────────────────────────────── */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border);
+}
+
+.stat-icon {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ── Dashboard Section ────────────────────────────────────── */
+
+.dashboard-section {
+  margin-bottom: var(--space-8);
+}
+
+.dashboard-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.dashboard-section-header h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.ideas-grid-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+}
+
+/* ── Loading & Empty States ───────────────────────────────── */
+
+.loading-state {
+  text-align: center;
+  padding: var(--space-12);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+}
+
+.empty-card {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.empty-card .empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-4);
+}
+
+.empty-card h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.empty-card p {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-sm);
+}
+
+/* ── Form Pages ───────────────────────────────────────────── */
+
+.form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 640px;
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+}
+
+/* ── Profile ──────────────────────────────────────────────── */
+
+.profile-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 640px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.profile-avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.profile-field-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.profile-field-value {
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+.profile-field-empty {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* ── Interest Modal ───────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 480px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideInUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.modal-header h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-xl);
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding-top: var(--space-3);
+}
+
+/* ── Interests List ───────────────────────────────────────── */
+
+.interests-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.interest-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+  flex-wrap: wrap;
+}
+
+.interest-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.interest-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.interest-idea-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.interest-message {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.interest-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.interest-amount {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ideas-grid-dashboard {
+    grid-template-columns: 1fr;
+  }
+}

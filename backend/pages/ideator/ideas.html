@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Ideas</title>
+</head>
+
+<body>
+
+<nav>
+  <a href="/ideator/dashboard">Dashboard</a>
+  <a href="/ideator/ideas">My Ideas</a>
+  <a href="/ideator/create-idea">Create Idea</a>
+  <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h1>My Ideas</h1>
+
+<div id="ideas"></div>
+
+<script>
+async function loadIdeas() {
+  const res = await fetch("/api/ideas/mine");
+  const ideas = await res.json();
+
+  const container = document.getElementById("ideas");
+
+  if (ideas.length === 0) {
+    container.innerHTML = "<p>No ideas yet</p>";
+    return;
+  }
+
+  container.innerHTML = ideas.map(idea => `
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+      <h3>${idea.title}</h3>
+      <p>${idea.description}</p>
+      <small>Funding: ${idea.funding_needed}</small>
+    </div>
+  `).join("");
+}
+
+loadIdeas();
+</script>
+
+</body>
+</html> 

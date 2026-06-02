@@ -1,0 +1,110 @@
+.idea-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.idea-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.idea-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.idea-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.idea-card-date {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.idea-card-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: var(--leading-snug);
+}
+
+.idea-card-summary {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.idea-card-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.idea-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-light);
+  margin-top: auto;
+}
+
+.idea-card-funding {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.idea-card-funding-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.idea-card-funding-amount {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+}
+
+.idea-card-owner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.idea-card-owner-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.idea-card-owner-name {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.idea-card-actions {
+  display: flex;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+}
