@@ -2,16 +2,16 @@ import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
 const ideatorLinks = [
-  { to: '/ideator/dashboard', label: 'Dashboard', icon: '📊' },
-  { to: '/ideator/ideas', label: 'My Ideas', icon: '💡' },
-  { to: '/ideator/create-idea', label: 'Post New Idea', icon: '✏️' },
-  { to: '/ideator/profile', label: 'My Profile', icon: '👤' },
+  { to: '/ideator/dashboard', label: 'Dashboard' },
+  { to: '/ideator/ideas', label: 'My Ideas' },
+  { to: '/ideator/create-idea', label: 'Post New Idea' },
+  { to: '/ideator/profile', label: 'My Profile' },
 ];
 
 const investorLinks = [
-  { to: '/investor/dashboard', label: 'Dashboard', icon: '📊' },
-  { to: '/investor/browse', label: 'Browse Ideas', icon: '🔍' },
-  { to: '/investor/interests', label: 'My Interests', icon: '❤️' },
+  { to: '/investor/dashboard', label: 'Dashboard' },
+  { to: '/investor/browse', label: 'Browse Ideas' },
+  { to: '/investor/interests', label: 'My Interests' },
 ];
 
 export default function Sidebar({ role }) {
@@ -21,9 +21,7 @@ export default function Sidebar({ role }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <span className="sidebar-role-badge">
-          {role === 'ideator' ? '💡 Ideator' : '💰 Investor'}
-        </span>
+        <span className="sidebar-role-badge">{role === 'ideator' ? 'Ideator' : 'Investor'}</span>
       </div>
       <nav className="sidebar-nav">
         {links.map((link) => (
@@ -32,7 +30,6 @@ export default function Sidebar({ role }) {
             to={link.to}
             className={`sidebar-link ${location.pathname === link.to ? 'active' : ''}`}
           >
-            <span className="sidebar-link-icon">{link.icon}</span>
             <span className="sidebar-link-label">{link.label}</span>
           </Link>
         ))}

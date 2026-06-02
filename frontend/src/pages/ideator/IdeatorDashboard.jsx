@@ -23,7 +23,7 @@ export default function IdeatorDashboard() {
     <DashboardLayout role="ideator">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Welcome back, {user?.username} 👋</h1>
+          <h1 className="page-title">Welcome back, {user?.username}</h1>
           <p className="page-subtitle">Here's an overview of your ideas and activity</p>
         </div>
         <Link to="/ideator/create-idea" className="btn btn-primary">
@@ -34,14 +34,14 @@ export default function IdeatorDashboard() {
       {/* Stats */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">💡</div>
+          <div className="stat-icon">Ideas</div>
           <div className="stat-info">
             <span className="stat-value">{ideas.length}</span>
             <span className="stat-label">Total Ideas</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">💰</div>
+          <div className="stat-icon">Funds</div>
           <div className="stat-info">
             <span className="stat-value">
               ${totalFunding.toLocaleString()}
@@ -50,7 +50,7 @@ export default function IdeatorDashboard() {
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon">Stats</div>
           <div className="stat-info">
             <span className="stat-value">{ideas.filter(i => i.visibility === 'public').length || ideas.length}</span>
             <span className="stat-label">Public Ideas</span>
@@ -75,7 +75,7 @@ export default function IdeatorDashboard() {
           </div>
         ) : (
           <div className="empty-card">
-            <div className="empty-icon">💡</div>
+            <div className="empty-icon">Ideas</div>
             <h3>No ideas yet</h3>
             <p>Post your first idea to start attracting investors</p>
             <Link to="/ideator/create-idea" className="btn btn-primary">Post Your First Idea</Link>

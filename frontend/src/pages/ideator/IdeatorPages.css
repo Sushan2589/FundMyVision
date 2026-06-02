@@ -9,6 +9,22 @@
   gap: var(--space-4);
   margin-bottom: var(--space-8);
   flex-wrap: wrap;
+  position: relative;
+}
+
+.page-header::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 4px;
+  width: 6px;
+  height: calc(100% - 8px);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    180deg,
+    var(--color-primary),
+    var(--color-accent)
+  );
 }
 
 .page-title {
@@ -16,6 +32,10 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: -0.02em;
   margin-bottom: var(--space-1);
+}
+
+.page-header > div:first-child {
+  padding-left: var(--space-4);
 }
 
 .page-subtitle {
@@ -37,19 +57,33 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-5) var(--space-6);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(244, 245, 239, 0.9)
+  );
+  border: 1px solid rgba(7, 83, 39, 0.08);
   border-radius: var(--radius-xl);
   transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card:hover {
-  box-shadow: var(--shadow-sm);
-  border-color: var(--color-border);
+  box-shadow: 0 16px 40px rgba(7, 83, 39, 0.12);
+  border-color: rgba(7, 83, 39, 0.16);
+  transform: translateY(-2px);
 }
 
 .stat-icon {
-  font-size: 36px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-dark);
+  background: rgba(7, 83, 39, 0.08);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
   flex-shrink: 0;
 }
 
@@ -108,13 +142,31 @@
 .empty-card {
   text-align: center;
   padding: var(--space-12) var(--space-6);
-  background: var(--color-surface);
-  border: 2px dashed var(--color-border);
+  background:
+    radial-gradient(circle at top, rgba(211, 250, 153, 0.18), transparent 36%),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(244, 245, 239, 0.92)
+    );
+  border: 1px solid rgba(7, 83, 39, 0.12);
   border-radius: var(--radius-xl);
+  box-shadow: 0 18px 50px rgba(7, 83, 39, 0.08);
 }
 
 .empty-card .empty-icon {
-  font-size: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 112px;
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  background: rgba(7, 83, 39, 0.08);
+  border: 1px solid rgba(7, 83, 39, 0.1);
+  border-radius: 50%;
   margin-bottom: var(--space-4);
 }
 
@@ -132,11 +184,16 @@
 /* ── Form Pages ───────────────────────────────────────────── */
 
 .form-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(244, 245, 239, 0.95)
+  );
+  border: 1px solid rgba(7, 83, 39, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   max-width: 640px;
+  box-shadow: 0 18px 50px rgba(7, 83, 39, 0.08);
 }
 
 .form-card form {
@@ -154,11 +211,16 @@
 /* ── Profile ──────────────────────────────────────────────── */
 
 .profile-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(244, 245, 239, 0.95)
+  );
+  border: 1px solid rgba(7, 83, 39, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   max-width: 640px;
+  box-shadow: 0 18px 50px rgba(7, 83, 39, 0.08);
 }
 
 .profile-header {
@@ -174,7 +236,11 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark),
+    var(--color-primary)
+  );
   color: #fff;
   display: flex;
   align-items: center;
@@ -241,7 +307,17 @@
 }
 
 .modal-content {
-  background: var(--color-surface);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(211, 250, 153, 0.18),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.99),
+      rgba(244, 245, 239, 0.96)
+    );
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   max-width: 480px;
@@ -249,6 +325,7 @@
   max-height: 90vh;
   overflow-y: auto;
   animation: slideInUp 0.3s ease;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
@@ -307,15 +384,21 @@
   justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-5) var(--space-6);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(244, 245, 239, 0.94)
+  );
+  border: 1px solid rgba(7, 83, 39, 0.08);
   border-radius: var(--radius-xl);
   transition: all var(--transition-base);
   flex-wrap: wrap;
+  box-shadow: 0 10px 30px rgba(7, 83, 39, 0.06);
 }
 
 .interest-card:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 18px 40px rgba(7, 83, 39, 0.1);
+  transform: translateY(-2px);
 }
 
 .interest-info {

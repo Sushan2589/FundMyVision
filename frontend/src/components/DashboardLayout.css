@@ -17,3 +17,7 @@
     padding: var(--space-4);
   }
 }
+
+.step-number{
+  color: var(--color-primary);
+}

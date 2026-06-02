@@ -73,14 +73,14 @@ export default function IdeatorProfile() {
         </div>
         {!editing && (
           <button onClick={() => setEditing(true)} className="btn btn-secondary">
-            ✏️ Edit Profile
+            Edit Profile
           </button>
         )}
       </div>
 
       {success && (
         <div className="auth-success" style={{ maxWidth: 640, marginBottom: 'var(--space-5)' }}>
-          <span>✅</span> {success}
+          <span>Success:</span> {success}
         </div>
       )}
 

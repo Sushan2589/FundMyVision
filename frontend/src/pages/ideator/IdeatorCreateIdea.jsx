@@ -58,7 +58,7 @@ export default function IdeatorCreateIdea() {
       <div className="form-card">
         {error && (
           <div className="auth-error" style={{ marginBottom: 'var(--space-5)' }}>
-            <span>⚠️</span> {error}
+            <span>Warning:</span> {error}
           </div>
         )}
 
@@ -159,7 +159,7 @@ export default function IdeatorCreateIdea() {
               className="btn btn-primary btn-lg"
               disabled={loading}
             >
-              {loading ? 'Posting...' : '🚀 Post Idea'}
+              {loading ? 'Posting...' : 'Post Idea'}
             </button>
             <Link to="/ideator/ideas" className="btn btn-ghost btn-lg">Cancel</Link>
           </div>

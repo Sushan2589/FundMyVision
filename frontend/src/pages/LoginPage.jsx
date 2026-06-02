@@ -38,7 +38,7 @@ export default function LoginPage() {
 
           {error && (
             <div className="auth-error">
-              <span>⚠️</span> {error}
+              <span>Warning:</span> {error}
             </div>
           )}
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
       <div className="auth-right">
         <div className="auth-right-content">
-          <div className="auth-right-icon">💡</div>
+          <div className="auth-right-icon">Ideas</div>
           <h2>Turn Ideas Into Reality</h2>
           <p>Connect with investors who believe in your vision, or discover the next breakthrough idea to fund.</p>
         </div>

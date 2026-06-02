@@ -23,7 +23,7 @@ export default function LandingPage() {
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-content animate-slide-up">
-            <div className="hero-badge">🚀 The Future of Crowdfunding</div>
+            <div className="hero-badge">The Future of Crowdfunding</div>
             <h1 className="hero-title">
               Where <span className="hero-highlight">Visionary Ideas</span> Meet
               <span className="hero-highlight"> Passionate Investors</span>
@@ -68,19 +68,19 @@ export default function LandingPage() {
           <div className="steps-grid">
             <div className="step-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
               <div className="step-number">01</div>
-              <div className="step-icon">💡</div>
+              <div className="step-icon">Idea</div>
               <h3 className="step-title">Share Your Vision</h3>
               <p className="step-text">Sign up as an Ideator and post your innovative project idea with funding requirements.</p>
             </div>
             <div className="step-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
               <div className="step-number">02</div>
-              <div className="step-icon">🔍</div>
+              <div className="step-icon">Explore</div>
               <h3 className="step-title">Discover & Connect</h3>
               <p className="step-text">Investors browse ideas, analyze potential, and express interest in projects they believe in.</p>
             </div>
             <div className="step-card animate-slide-up" style={{ animationDelay: '0.3s' }}>
               <div className="step-number">03</div>
-              <div className="step-icon">🤝</div>
+              <div className="step-icon">Support</div>
               <h3 className="step-title">Fund & Grow</h3>
               <p className="step-text">Ideas get funded, projects get built, and both ideators and investors grow together.</p>
             </div>
@@ -104,7 +104,7 @@ export default function LandingPage() {
             </div>
           ) : (
             <div className="empty-state">
-              <div className="empty-icon">💡</div>
+              <div className="empty-icon">No Ideas</div>
               <h3>No ideas yet</h3>
               <p>Be the first to post your vision!</p>
               <Link to="/signup" className="btn btn-primary">Post Your Idea</Link>
@@ -121,10 +121,10 @@ export default function LandingPage() {
             <p className="cta-text">Join thousands of innovators and investors on FundMyVision</p>
             <div className="cta-actions">
               <Link to="/signup" className="btn btn-primary btn-lg">
-                🚀 I Have an Idea
+                I Have an Idea
               </Link>
               <Link to="/signup" className="btn btn-secondary btn-lg" style={{ borderColor: '#fff', color: '#fff' }}>
-                💰 I Want to Invest
+                I Want to Invest
               </Link>
             </div>
           </div>

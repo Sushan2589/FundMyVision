@@ -37,7 +37,7 @@ export default function IdeatorIdeas() {
         </div>
       ) : (
         <div className="empty-card">
-          <div className="empty-icon">💡</div>
+          <div className="empty-icon">Ideas</div>
           <h3>No ideas posted yet</h3>
           <p>Share your innovative idea with the world and attract investors</p>
           <Link to="/ideator/create-idea" className="btn btn-primary">Post Your First Idea</Link>

@@ -80,7 +80,7 @@ export default function InvestorBrowse() {
         <input
           type="text"
           className="input-field"
-          placeholder="🔍  Search by title, category, or creator..."
+          placeholder="Search by title, category, or creator..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ maxWidth: 500 }}
@@ -104,7 +104,7 @@ export default function InvestorBrowse() {
                     className="btn btn-primary btn-sm"
                     onClick={() => setModalIdea(idea)}
                   >
-                    🤝 I'm OnBoard
+                    I'm OnBoard
                   </button>
                 )
               }
@@ -113,7 +113,7 @@ export default function InvestorBrowse() {
         </div>
       ) : (
         <div className="empty-card">
-          <div className="empty-icon">🔍</div>
+          <div className="empty-icon">Browse</div>
           <h3>{search ? 'No ideas match your search' : 'No ideas available yet'}</h3>
           <p>{search ? 'Try a different search term' : 'Check back soon for new opportunities'}</p>
         </div>
@@ -161,7 +161,7 @@ export default function InvestorBrowse() {
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary" disabled={sending}>
-                  {sending ? 'Sending...' : '🤝 Send Interest'}
+                  {sending ? 'Sending...' : 'Send Interest'}
                 </button>
               </div>
             </form>

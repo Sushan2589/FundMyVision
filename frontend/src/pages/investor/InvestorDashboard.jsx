@@ -23,32 +23,32 @@ export default function InvestorDashboard() {
     <DashboardLayout role="investor">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Welcome back, {user?.username} 👋</h1>
+          <h1 className="page-title">Welcome back, {user?.username}</h1>
           <p className="page-subtitle">Discover and invest in groundbreaking ideas</p>
         </div>
         <Link to="/investor/browse" className="btn btn-primary">
-          🔍 Browse Ideas
+          Browse Ideas
         </Link>
       </div>
 
       {/* Stats */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">❤️</div>
+          <div className="stat-icon">Interest</div>
           <div className="stat-info">
             <span className="stat-value">{interests.length}</span>
             <span className="stat-label">Interests Sent</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">⏳</div>
+          <div className="stat-icon">Pending</div>
           <div className="stat-info">
             <span className="stat-value">{pendingCount}</span>
             <span className="stat-label">Pending</span>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">💰</div>
+          <div className="stat-icon">Funds</div>
           <div className="stat-info">
             <span className="stat-value">${totalInvested.toLocaleString()}</span>
             <span className="stat-label">Total Offered</span>
@@ -84,7 +84,7 @@ export default function InvestorDashboard() {
           </div>
         ) : (
           <div className="empty-card">
-            <div className="empty-icon">🔍</div>
+            <div className="empty-icon">Browse</div>
             <h3>No interests yet</h3>
             <p>Browse available ideas and express your interest to get started</p>
             <Link to="/investor/browse" className="btn btn-primary">Browse Ideas</Link>

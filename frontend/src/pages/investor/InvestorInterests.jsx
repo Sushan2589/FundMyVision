@@ -48,7 +48,7 @@ export default function InvestorInterests() {
         </div>
       ) : (
         <div className="empty-card">
-          <div className="empty-icon">❤️</div>
+          <div className="empty-icon">Interest</div>
           <h3>No interests yet</h3>
           <p>You haven't expressed interest in any ideas yet. Start browsing!</p>
           <a href="/investor/browse" className="btn btn-primary">Browse Ideas</a>

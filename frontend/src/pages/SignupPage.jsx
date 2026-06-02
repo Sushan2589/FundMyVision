@@ -40,7 +40,7 @@ export default function SignupPage() {
 
           {error && (
             <div className="auth-error">
-              <span>⚠️</span> {error}
+              <span>Warning:</span> {error}
             </div>
           )}
 
@@ -52,7 +52,7 @@ export default function SignupPage() {
                   className={`role-option ${role === 'ideator' ? 'selected' : ''}`}
                   onClick={() => setRole('ideator')}
                 >
-                  <span className="role-option-icon">💡</span>
+                  <span className="role-option-icon">Idea</span>
                   <span className="role-option-label">Ideator</span>
                   <span className="role-option-desc">I have ideas to share</span>
                 </div>
@@ -60,7 +60,7 @@ export default function SignupPage() {
                   className={`role-option ${role === 'investor' ? 'selected' : ''}`}
                   onClick={() => setRole('investor')}
                 >
-                  <span className="role-option-icon">💰</span>
+                  <span className="role-option-icon">Fund</span>
                   <span className="role-option-label">Investor</span>
                   <span className="role-option-desc">I want to fund ideas</span>
                 </div>
@@ -124,7 +124,7 @@ export default function SignupPage() {
 
       <div className="auth-right">
         <div className="auth-right-content">
-          <div className="auth-right-icon">🚀</div>
+          <div className="auth-right-icon">Start</div>
           <h2>Start Your Journey</h2>
           <p>Whether you're an innovator with a bold idea or an investor looking for the next opportunity — you're in the right place.</p>
         </div>
