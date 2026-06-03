@@ -112,6 +112,45 @@ db.serialize(() => {
     )
   `);
 
+  // DISCUSSION GROUPS (one per idea, for all connected investors + ideator)
+  db.run(`
+    CREATE TABLE IF NOT EXISTS discussion_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      idea_id INTEGER NOT NULL UNIQUE,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+      FOREIGN KEY (idea_id) REFERENCES ideas(id)
+    )
+  `);
+
+  // DISCUSSION GROUP MEMBERS
+  db.run(`
+    CREATE TABLE IF NOT EXISTS discussion_group_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      group_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+      UNIQUE(group_id, user_id),
+      FOREIGN KEY (group_id) REFERENCES discussion_groups(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
+  // DISCUSSION GROUP MESSAGES
+  db.run(`
+    CREATE TABLE IF NOT EXISTS discussion_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      group_id INTEGER NOT NULL,
+      sender_id INTEGER NOT NULL,
+      message TEXT NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+      FOREIGN KEY (group_id) REFERENCES discussion_groups(id),
+      FOREIGN KEY (sender_id) REFERENCES users(id)
+    )
+  `);
+
 });
 
 module.exports = db;

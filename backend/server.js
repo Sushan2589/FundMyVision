@@ -17,6 +17,7 @@ const kycRoutes = require("./routes/api/kyc");
 const investorProfileRoutes = require("./routes/api/investorProfile");
 const adminRoutes = require("./routes/api/admin");
 const chatRoutes = require("./routes/api/chat");
+const discussionGroupRoutes = require("./routes/api/discussionGroups");
 
 const app = express();
 
@@ -130,6 +131,7 @@ app.use("/api/kyc", kycRoutes);
 app.use("/api/investor-profile", investorProfileRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/discussion-groups", discussionGroupRoutes);
 
 // Recommender proxy endpoint
 app.get("/api/recommend/:id", isAuthenticated, async (req, res) => {

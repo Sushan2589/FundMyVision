@@ -94,23 +94,77 @@ router.post("/:id/accept", isAuthenticated, (req, res) => {
           if (err) return res.status(500).json({ error: "Database error" });
 
           const { idea_id, investor_id } = interest;
+
+          // Step 1: Create or find the 1-on-1 conversation
           db.get(
             "SELECT id FROM conversations WHERE idea_id = ? AND investor_id = ?",
             [idea_id, investor_id],
             (err, conv) => {
               if (err) return res.status(500).json({ error: "Database error" });
-              if (conv) {
-                return res.json({ success: true, conversationId: conv.id });
-              }
 
-              db.run(
-                "INSERT INTO conversations (idea_id, investor_id) VALUES (?, ?)",
-                [idea_id, investor_id],
-                function (err) {
-                  if (err) return res.status(500).json({ error: "Database error" });
-                  res.json({ success: true, conversationId: this.lastID });
-                }
-              );
+              const handleConversationCreated = (conversationId) => {
+                // Step 2: Create or find the discussion group for this idea
+                db.get(
+                  "SELECT id FROM discussion_groups WHERE idea_id = ?",
+                  [idea_id],
+                  (err, group) => {
+                    if (err) {
+                      console.error("Discussion group lookup error:", err);
+                      return res.json({ success: true, conversationId });
+                    }
+
+                    const addMembers = (groupId) => {
+                      // Add ideator (owner) to group
+                      db.run(
+                        "INSERT OR IGNORE INTO discussion_group_members (group_id, user_id) VALUES (?, ?)",
+                        [groupId, ownerId],
+                        (err) => {
+                          if (err) console.error("Add ideator to group error:", err);
+                        }
+                      );
+                      // Add investor to group
+                      db.run(
+                        "INSERT OR IGNORE INTO discussion_group_members (group_id, user_id) VALUES (?, ?)",
+                        [groupId, investor_id],
+                        (err) => {
+                          if (err) console.error("Add investor to group error:", err);
+                        }
+                      );
+                      res.json({ success: true, conversationId });
+                    };
+
+                    if (group) {
+                      addMembers(group.id);
+                    } else {
+                      // Create new discussion group for the idea
+                      db.run(
+                        "INSERT INTO discussion_groups (idea_id) VALUES (?)",
+                        [idea_id],
+                        function (err) {
+                          if (err) {
+                            console.error("Create discussion group error:", err);
+                            return res.json({ success: true, conversationId });
+                          }
+                          addMembers(this.lastID);
+                        }
+                      );
+                    }
+                  }
+                );
+              };
+
+              if (conv) {
+                handleConversationCreated(conv.id);
+              } else {
+                db.run(
+                  "INSERT INTO conversations (idea_id, investor_id) VALUES (?, ?)",
+                  [idea_id, investor_id],
+                  function (err) {
+                    if (err) return res.status(500).json({ error: "Database error" });
+                    handleConversationCreated(this.lastID);
+                  }
+                );
+              }
             }
           );
         }
