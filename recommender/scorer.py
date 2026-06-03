@@ -1,26 +1,40 @@
 from database import get_connection
-from sentence_transformers import SentenceTransformer, util
+from thefuzz import fuzz
 
-# Load the model once when the module is imported — not on every request.
-# all-MiniLM-L6-v2 is lightweight (~120MB RAM) and fast enough for a demo.
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-SIMILARITY_THRESHOLD = 0.3  # below this, we treat the match as zero
+FUZZY_THRESHOLD = 60  # Out of 100. Lower means more forgiving of typos.
 
 
-def semantic_score(text_a: str, text_b: str, max_points: int) -> float:
+def non_ai_text_score(investor_tags_text: str, item_text: str, max_points: int) -> int:
     """
-    Returns a score between 0 and max_points based on how semantically
-    similar text_a and text_b are. Anything below SIMILARITY_THRESHOLD
-    gets zero points so unrelated concepts don't sneak in points.
+    Calculates similarity using exact keyword intersections and lightweight 
+    Levenshtein distance matching instead of heavy neural network embeddings.
     """
-    if not text_a or not text_b:
+    if not investor_tags_text or not item_text:
         return 0
-    embeddings = model.encode([text_a, text_b], convert_to_tensor=True)
-    similarity = util.cos_sim(embeddings[0], embeddings[1]).item()
-    if similarity < SIMILARITY_THRESHOLD:
+
+    # Clean and split into sets of words/tags
+    # e.g., "AI, SaaS, Fintech" -> {"ai", "saas", "fintech"}
+    investor_tags = {t.strip().lower() for t in investor_tags_text.replace(",", " ").split() if t.strip()}
+    item_words = {w.strip().lower() for w in item_text.replace(",", " ").split() if w.strip()}
+
+    if not investor_tags or not item_words:
         return 0
-    return round(similarity * max_points)
+
+    # 1. Check for Exact Keyword Matches (Set Intersection)
+    # If the user listed "AI" and the project category contains "AI", give max points immediately.
+    exact_matches = investor_tags.intersection(item_words)
+    if exact_matches:
+        return max_points
+
+    # 2. Fallback: Fuzzy Partial String Matching (No AI, pure character math)
+    # Handles things like "Fintech" vs "Fin-tech" or "Machine Learning" vs "ML" typos
+    fuzzy_ratio = fuzz.partial_ratio(investor_tags_text.lower(), item_text.lower())
+    
+    if fuzzy_ratio >= FUZZY_THRESHOLD:
+        # Scale the 0-100 score down to your max_points scale
+        return round((fuzzy_ratio / 100) * max_points)
+        
+    return 0
 
 
 def get_recommendations(investor_id: int) -> list[int]:
@@ -39,20 +53,17 @@ def get_recommendations(investor_id: int) -> list[int]:
         conn.close()
         return []
 
-    raw_industries = profile["industries"] or ""
-    investor_industries = [i.strip().lower() for i in raw_industries.split(",") if i.strip()]
-    investor_industries_text = " ".join(investor_industries)  # joined for embedding
-
+    # Format investor tags
+    investor_industries_text = (profile["industries"] or "").strip()
     min_inv = profile["min_investment"]
     max_inv = profile["max_investment"]
 
     # Fetch candidate ideas — public, not already seen by this investor.
-    # Also fetches interest_count, is_recent, and owner_id for scoring.
-    # Note: alias "intr" used for interests to avoid clashing with Python's built-in "int".
     cursor.execute("""
         SELECT
             i.id,
             i.category,
+            i.summary,
             i.funding_needed,
             i.owner_id,
             COUNT(intr.id) AS interest_count,
@@ -61,18 +72,16 @@ def get_recommendations(investor_id: int) -> list[int]:
                 ELSE 0
             END AS is_recent
         FROM ideas i
-        LEFT JOIN interests intr
-            ON i.id = intr.idea_id AND intr.investor_id != ?
+        LEFT JOIN interests intr ON i.id = intr.idea_id
         WHERE i.visibility = 'public'
           AND i.id NOT IN (
               SELECT idea_id FROM interests WHERE investor_id = ?
           )
         GROUP BY i.id
-    """, (investor_id, investor_id))
+    """, (investor_id,))
     ideas = cursor.fetchall()
 
-    # Fetch ideator profiles so we can use their skills as a scoring signal.
-    # We build a dict of { user_id: skills_text } for fast lookup.
+    # Fetch ideator profiles for skills matching.
     cursor.execute("SELECT user_id, skills FROM ideator_profiles")
     ideator_skills = {
         row["user_id"]: (row["skills"] or "").strip()
@@ -81,7 +90,6 @@ def get_recommendations(investor_id: int) -> list[int]:
 
     conn.close()
 
-    # Score each idea
     scored = []
 
     for idea in ideas:
@@ -89,34 +97,30 @@ def get_recommendations(investor_id: int) -> list[int]:
         explanation = []
 
         idea_category = (idea["category"] or "").strip()
+        idea_summary = (idea["summary"] or "").strip()
+        # Combine category and summary for a wider keyword net
+        idea_text_pool = f"{idea_category} {idea_summary}"
 
-        # Signal 1: Industry match — semantic similarity (up to +40)
-        # How closely does the idea's category relate to the investor's industries?
-        industry_score = semantic_score(investor_industries_text, idea_category, 40)
+        # Signal 1: Industry match via keywords/fuzzy (up to +40)
+        industry_score = non_ai_text_score(investor_industries_text, idea_text_pool, 40)
         score += industry_score
         if industry_score > 0:
             explanation.append(f"industry match ({industry_score}pts)")
 
-        # Signal 2: Ideator skills match — semantic similarity (up to +20)
-        # How closely do the ideator's skills relate to the idea's category?
-        # Rewards ideas backed by a founder who knows their domain.
+        # Signal 2: Ideator skills match against investor interests (up to +20)
         owner_skills = ideator_skills.get(idea["owner_id"], "")
-        skills_score = semantic_score(owner_skills, idea_category, 20)
+        skills_score = non_ai_text_score(investor_industries_text, owner_skills, 20)
         score += skills_score
         if skills_score > 0:
-            explanation.append(f"skills match ({skills_score}pts)")
+            explanation.append(f"skills alignment ({skills_score}pts)")
 
-        # Signal 3: Funding range — binary check (+30)
-        # Signal 4: Funding closeness — only runs if Signal 3 passed (up to +15)
-        # Separating these ensures an out-of-range idea never gets closeness points.
+        # Signal 3 & 4: Funding match checks (+30 and up to +15)
         funding = idea["funding_needed"]
         if funding is not None and min_inv is not None and max_inv is not None:
             if min_inv <= funding <= max_inv:
                 score += 30
                 explanation.append("within budget")
 
-                # How centered is the ask within the investor's range?
-                # Perfect center → +15, near the edges → fewer points.
                 range_size = max_inv - min_inv
                 if range_size > 0:
                     midpoint = (min_inv + max_inv) / 2
@@ -127,32 +131,25 @@ def get_recommendations(investor_id: int) -> list[int]:
                     if closeness_score > 7:
                         explanation.append(f"good funding fit ({closeness_score}pts)")
 
-        # Signal 5: Popularity — other investors' interest (up to +20)
-        # Capped at 4 investors (+5 each) to avoid runaway popular ideas.
+        # Signal 5: Popularity multiplier (up to +20)
         interest_count = idea["interest_count"] or 0
         popularity_score = min(interest_count * 5, 20)
         score += popularity_score
         if popularity_score > 0:
-            explanation.append(f"{interest_count} other investor(s) interested")
+            explanation.append(f"{interest_count} investor(s) interested")
 
         # Signal 6: Recency (+10)
-        # Ideas posted in the last 30 days get a freshness bonus.
         if idea["is_recent"]:
             score += 10
             explanation.append("recently posted")
 
-        # Signal 7: Ideator has a profile (+5)
-        # A filled-out profile signals the ideator is serious.
+        # Signal 7: Profile completeness bonus (+5)
         if idea["owner_id"] in ideator_skills:
             score += 5
-            explanation.append("ideator has profile")
+            explanation.append("ideator profile verified")
 
         scored.append((idea["id"], score, explanation))
 
+    # Sort candidates by total score descending
     scored.sort(key=lambda x: x[1], reverse=True)
-
-    print(f"\nRecommendations for investor {investor_id}:")
-    for idea_id, total_score, reasons in scored:
-        print(f"  Idea {idea_id}: {total_score} pts — {', '.join(reasons) if reasons else 'no signals matched'}")
-
     return [idea_id for idea_id, _, _ in scored]

@@ -1,8 +1,17 @@
 Execute this code to run the API endpoint
 
-uvicorn main:app --reload --port 8000
+Open a virtual environment if on Linux
+
+Execute : pip install -r requirements.txt
+
+Execute : uvicorn main:app --reload --port 8000
 
 Goto : "https://...:8000/recommend/{investor_id}"
+
+
+For fake data to be populated, execute : python seed.py
+
+
 Returns JSON
 {
     "investor_id" : investor_id,
