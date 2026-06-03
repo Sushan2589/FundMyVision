@@ -261,14 +261,14 @@ app.get('/logout', (req, res) => {
 
 
 
-
+app.use(refreshKyc);
 app.use("/ideator", ideatorRoutes);
 app.use("/investor", investorRoutes);
 app.use("/admin",adminRoutes)
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/interests", interestsRoutes);
-app.use(refreshKyc);
+
 app.use("/api/profile", profileApi);
 app.use("/api/admin", require("./routes/api/admin"));
 

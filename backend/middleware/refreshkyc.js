@@ -10,7 +10,7 @@ async function refreshKyc(req, res, next) {
         db.get(
             `
             SELECT verification_status
-            FROM investor_profile
+            FROM investor_profiles
             WHERE userid = ?
             `,
             [req.session.user.id],
