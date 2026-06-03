@@ -9,6 +9,9 @@ Execute : uvicorn main:app --reload --port 8000
 Goto : "https://...:8000/recommend/{investor_id}"
 
 
+For fake data to be populated, execute : python seed.py
+
+
 Returns JSON
 {
     "investor_id" : investor_id,
