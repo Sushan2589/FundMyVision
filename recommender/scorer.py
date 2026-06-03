@@ -1,12 +1,33 @@
 from database import get_connection
+from sentence_transformers import SentenceTransformer, util
+
+# Load the model once when the module is imported — not on every request.
+# all-MiniLM-L6-v2 is lightweight (~120MB RAM) and fast enough for a demo.
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+SIMILARITY_THRESHOLD = 0.3  # below this, we treat the match as zero
+
+
+def semantic_score(text_a: str, text_b: str, max_points: int) -> float:
+    """
+    Returns a score between 0 and max_points based on how semantically
+    similar text_a and text_b are. Anything below SIMILARITY_THRESHOLD
+    gets zero points so unrelated concepts don't sneak in points.
+    """
+    if not text_a or not text_b:
+        return 0
+    embeddings = model.encode([text_a, text_b], convert_to_tensor=True)
+    similarity = util.cos_sim(embeddings[0], embeddings[1]).item()
+    if similarity < SIMILARITY_THRESHOLD:
+        return 0
+    return round(similarity * max_points)
+
 
 def get_recommendations(investor_id: int) -> list[int]:
     conn = get_connection()
     cursor = conn.cursor()
 
-    # ─── Step 1: Fetch the investor's profile ───────────────────────────────
-    # We need their preferred industries and investment range.
-    # If they haven't filled out a profile yet, we return an empty list.
+    # Fetch the investor's profile
     cursor.execute("""
         SELECT industries, min_investment, max_investment
         FROM investor_profiles
@@ -18,33 +39,30 @@ def get_recommendations(investor_id: int) -> list[int]:
         conn.close()
         return []
 
-    # Turn "fintech,health,edtech" into ["fintech", "health", "edtech"]
-    # .lower() makes the matching case-insensitive
     raw_industries = profile["industries"] or ""
     investor_industries = [i.strip().lower() for i in raw_industries.split(",") if i.strip()]
+    investor_industries_text = " ".join(investor_industries)  # joined for embedding
 
     min_inv = profile["min_investment"]
     max_inv = profile["max_investment"]
 
-    # ─── Step 2: Fetch candidate ideas ──────────────────────────────────────
-    # We only consider:
-    #   - public ideas (visibility = 'public')
-    #   - ideas this investor hasn't already expressed interest in
-    # We also fetch extra data we need for scoring:
-    #   - interest_count: how many OTHER investors liked this idea (popularity)
-    #   - created_at: to check recency
-    #   - owner_id: to check if the ideator has a profile
+    # Fetch candidate ideas — public, not already seen by this investor.
+    # Also fetches interest_count, is_recent, and owner_id for scoring.
+    # Note: alias "intr" used for interests to avoid clashing with Python's built-in "int".
     cursor.execute("""
         SELECT
             i.id,
             i.category,
             i.funding_needed,
             i.owner_id,
-            COUNT(int.id) as interest_count,
-            CASE WHEN i.created_at >= datetime('now', '-30 days') THEN 1 ELSE 0 END as is_recent
+            COUNT(intr.id) AS interest_count,
+            CASE
+                WHEN i.created_at >= datetime('now', '-30 days') THEN 1
+                ELSE 0
+            END AS is_recent
         FROM ideas i
-        LEFT JOIN interests int
-            ON i.id = int.idea_id AND int.investor_id != ?
+        LEFT JOIN interests intr
+            ON i.id = intr.idea_id AND intr.investor_id != ?
         WHERE i.visibility = 'public'
           AND i.id NOT IN (
               SELECT idea_id FROM interests WHERE investor_id = ?
@@ -53,85 +71,88 @@ def get_recommendations(investor_id: int) -> list[int]:
     """, (investor_id, investor_id))
     ideas = cursor.fetchall()
 
-    # ─── Step 3: Fetch all ideator user_ids that have a profile ─────────────
-    # We do this once here rather than running a query inside the loop,
-    # which would be slow if there are many ideas.
-    cursor.execute("SELECT user_id FROM ideator_profiles")
-    ideators_with_profile = set(row["user_id"] for row in cursor.fetchall())
+    # Fetch ideator profiles so we can use their skills as a scoring signal.
+    # We build a dict of { user_id: skills_text } for fast lookup.
+    cursor.execute("SELECT user_id, skills FROM ideator_profiles")
+    ideator_skills = {
+        row["user_id"]: (row["skills"] or "").strip()
+        for row in cursor.fetchall()
+    }
 
     conn.close()
 
-    # ─── Step 4: Score each idea ─────────────────────────────────────────────
+    # Score each idea
     scored = []
 
     for idea in ideas:
         score = 0
-        explanation = []  # helpful for debugging during the demo
+        explanation = []
 
-        # Signal 1: Industry match (+40)
-        # Does the idea's category appear in what the investor cares about?
-        idea_category = (idea["category"] or "").strip().lower()
-        if idea_category and idea_category in investor_industries:
-            score += 40
-            explanation.append("industry match")
+        idea_category = (idea["category"] or "").strip()
 
-        # Signal 2: Funding range — binary check (+30)
-        # Is the funding amount within the investor's min/max budget?
+        # Signal 1: Industry match — semantic similarity (up to +40)
+        # How closely does the idea's category relate to the investor's industries?
+        industry_score = semantic_score(investor_industries_text, idea_category, 40)
+        score += industry_score
+        if industry_score > 0:
+            explanation.append(f"industry match ({industry_score}pts)")
+
+        # Signal 2: Ideator skills match — semantic similarity (up to +20)
+        # How closely do the ideator's skills relate to the idea's category?
+        # Rewards ideas backed by a founder who knows their domain.
+        owner_skills = ideator_skills.get(idea["owner_id"], "")
+        skills_score = semantic_score(owner_skills, idea_category, 20)
+        score += skills_score
+        if skills_score > 0:
+            explanation.append(f"skills match ({skills_score}pts)")
+
+        # Signal 3: Funding range — binary check (+30)
+        # Signal 4: Funding closeness — only runs if Signal 3 passed (up to +15)
+        # Separating these ensures an out-of-range idea never gets closeness points.
         funding = idea["funding_needed"]
         if funding is not None and min_inv is not None and max_inv is not None:
             if min_inv <= funding <= max_inv:
                 score += 30
                 explanation.append("within budget")
 
-            # Signal 3: Funding closeness — how centered is the ask? (up to +15)
-            # We calculate how close the funding is to the middle of their range.
-            # If range is $0–$100k and ask is $50k, that's perfect → +15
-            # If ask is $90k (near the edge), that's less ideal → fewer points
-            # Formula: 1 - (distance from midpoint / half the range)
-            range_size = max_inv - min_inv
-            if range_size > 0:
-                midpoint = (min_inv + max_inv) / 2
-                distance_from_center = abs(funding - midpoint)
-                closeness = 1 - (distance_from_center / (range_size / 2))
-                # closeness is between 0.0 and 1.0, multiply by 15 for points
-                closeness_score = round(max(0, closeness) * 15)
-                score += closeness_score
-                if closeness_score > 7:
-                    explanation.append("good funding fit")
+                # How centered is the ask within the investor's range?
+                # Perfect center → +15, near the edges → fewer points.
+                range_size = max_inv - min_inv
+                if range_size > 0:
+                    midpoint = (min_inv + max_inv) / 2
+                    distance_from_center = abs(funding - midpoint)
+                    closeness = 1 - (distance_from_center / (range_size / 2))
+                    closeness_score = round(max(0, closeness) * 15)
+                    score += closeness_score
+                    if closeness_score > 7:
+                        explanation.append(f"good funding fit ({closeness_score}pts)")
 
-        # Signal 4: Popularity — other investors' interest (up to +20)
-        # An idea that 5 other investors liked is more credible than one with 0.
-        # We cap the bonus at 20 points (reached at 4+ interested investors).
+        # Signal 5: Popularity — other investors' interest (up to +20)
+        # Capped at 4 investors (+5 each) to avoid runaway popular ideas.
         interest_count = idea["interest_count"] or 0
         popularity_score = min(interest_count * 5, 20)
         score += popularity_score
         if popularity_score > 0:
-            explanation.append(f"{interest_count} other investors interested")
+            explanation.append(f"{interest_count} other investor(s) interested")
 
-        # Signal 5: Recency (+10)
+        # Signal 6: Recency (+10)
         # Ideas posted in the last 30 days get a freshness bonus.
-        # created_at is stored as a string like "2024-01-15 10:30:00"
-        # so we just do a string comparison — SQLite stores dates as text.
         if idea["is_recent"]:
             score += 10
             explanation.append("recently posted")
 
-        # Signal 6: Ideator has a profile (+5)
-        # A filled-out ideator profile signals seriousness.
-        # We check against the set we built in Step 3.
-        if idea["owner_id"] in ideators_with_profile:
+        # Signal 7: Ideator has a profile (+5)
+        # A filled-out profile signals the ideator is serious.
+        if idea["owner_id"] in ideator_skills:
             score += 5
             explanation.append("ideator has profile")
 
         scored.append((idea["id"], score, explanation))
 
-    # ─── Step 5: Sort and return ─────────────────────────────────────────────
-    # Sort by score, highest first.
     scored.sort(key=lambda x: x[1], reverse=True)
 
-    # Print scoring breakdown to terminal — useful during the demo
     print(f"\nRecommendations for investor {investor_id}:")
     for idea_id, total_score, reasons in scored:
-        print(f"  Idea {idea_id}: {total_score} pts — {', '.join(reasons) if reasons else 'no match'}")
+        print(f"  Idea {idea_id}: {total_score} pts — {', '.join(reasons) if reasons else 'no signals matched'}")
 
     return [idea_id for idea_id, _, _ in scored]
