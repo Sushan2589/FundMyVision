@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const db = require("../../db");
 const isAuthenticated = require("../../middleware/auth");
+const kycRequired = require("../../middleware/kycRequired");
 
 // GET my ideas
 router.get("/mine", isAuthenticated, (req, res) => {
@@ -45,7 +46,8 @@ router.post("/create", isAuthenticated, (req, res) => {
   );
 });
 
-router.get("/", (req, res) => {
+router.get("/", isAuthenticated,
+    kycRequired, (req, res) => {
   db.all("SELECT * FROM ideas", [], (err, rows) => {
     if (err) {
       console.log(err);

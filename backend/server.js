@@ -7,13 +7,17 @@ const isAuthenticated = require("./middleware/auth");
 const ideatorOnly = require("./middleware/ideatorOnly");  
 const investorOnly = require("./middleware/investorOnly");
 const adminOnly = require("./middleware/adminOnly")
+const refreshKyc = require("./middleware/refreshKyc");
+
 
 const sessiondataRoutes = require("./routes/api/sessionData");
 const ideasRoutes = require("./routes/api/ideas");
 const profileRoutes = require("./routes/api/profile");
 const interestsRoutes = require("./routes/api/interests");
 const investorRoutes = require("./routes/investor");
+const adminRoutes = require("./routes/admin");
 
+const profileApi = require("./routes/api/profile");
 
 const app = express();
 
@@ -94,8 +98,66 @@ app.post("/signup", async (req, res) => {
     return res.send(err.message);
       }
 
-      
+           const userId = this.lastID;
+
+      // -------------------------
+      // INVESTOR PROFILE
+      // -------------------------
+      if (role === "investor") {
+
+        db.run(
+          `
+          INSERT INTO investor_profiles (
+            user_id,
+            verification_status
+          )
+          VALUES (?, 'pending')
+          `,
+          [userId],
+          (err) => {
+            if (err) {
+              console.log(err);
+              return res.send(err.message);
+            }
+
+            return res.redirect("/login?signup=success");
+          }
+        );
+
+        return;
+      }
+
+      // -------------------------
+      // IDEATOR PROFILE
+      // -------------------------
+      if (role === "ideator") {
+
+        db.run(
+          `
+          INSERT INTO ideator_profiles (
+            user_id,
+            bio,
+            skills
+          )
+          VALUES (?, '', '')
+          `,
+          [userId],
+          (err) => {
+            if (err) {
+              console.log(err);
+              return res.send(err.message);
+            }
+
+            return res.redirect("/login?signup=success");
+          }
+        );
+
+        return;
+      }
+
+      // fallback
       res.redirect("/login?signup=success");
+
     }
   );
 });
@@ -117,6 +179,50 @@ app.post("/login", (req, res) => {
         return res.send("Wrong password");
       }
 
+            // Default for ideators/admins
+      let verificationStatus = null;
+
+      // Investors have KYC status
+      if (user.role === "investor") {
+
+        const investor = await new Promise(
+          (resolve, reject) => {
+
+            db.get(
+              `
+              SELECT verification_status
+              FROM investor_profiles
+              WHERE user_id = ?
+              `,
+              [user.id],
+              (err, row) => {
+
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(row);
+                }
+
+              }
+            );
+
+          }
+        );
+
+        verificationStatus =
+          investor?.verification_status ||
+          "pending";
+      }
+
+      req.session.user = {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        email: user.email,
+        verification_status:
+          verificationStatus
+      };
+
       req.session.user = {
         id: user.id,
         username: user.username,
@@ -128,7 +234,7 @@ app.post("/login", (req, res) => {
   return res.redirect("/ideator/dashboard");
 }
 
-if (user.role === "investor") {
+if (user.role === "investor") { 
   return res.redirect("/investor/dashboard");
 }
 
@@ -153,11 +259,18 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+
+
 app.use("/ideator", ideatorRoutes);
 app.use("/investor", investorRoutes);
+app.use("/admin",adminRoutes)
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/interests", interestsRoutes);
+app.use(refreshKyc);
+app.use("/api/profile", profileApi);
+app.use("/api/admin", require("./routes/api/admin"));
 
 
 app.listen(3000, () => {

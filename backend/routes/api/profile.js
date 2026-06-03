@@ -22,19 +22,19 @@ router.get("/", isAuthenticated, (req, res) => {
 
 router.post("/update", isAuthenticated, (req, res) => {
   const userId = req.session.user.id;
-  const { bio, skills, location } = req.body;
+  const { bio, skills } = req.body;
 
   db.run(
     `
-    INSERT INTO ideator_profiles (user_id, bio, skills, location)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO ideator_profiles (user_id, bio, skills)
+    VALUES (?, ?, ?)
     ON CONFLICT(user_id)
     DO UPDATE SET
       bio = excluded.bio,
       skills = excluded.skills,
-      location = excluded.location
+      
     `,
-    [userId, bio, skills, location],
+    [userId, bio, skills],
     function (err) {
       if (err) {
         console.log(err);
@@ -44,6 +44,55 @@ router.post("/update", isAuthenticated, (req, res) => {
       res.redirect("/ideator/profile");
     }
   );
+});
+
+router.post("/kyc", isAuthenticated, (req, res) => {
+
+  const {
+        company_name,
+        bio,
+        industry,
+        min_investment,
+        max_investment
+    } = req.body;
+
+  db.run(
+        `
+        UPDATE investor_profiles
+        SET
+            company_name = ?,
+            bio = ?,
+            industries = ?,
+            min_investment = ?,
+            max_investment = ?,
+            verification_status = 'pending'
+        WHERE user_id = ?
+        `,
+        [
+            company_name,
+            bio,
+            industry,
+            min_investment,
+            max_investment,
+            req.session.user.id
+        ],
+    (err) => {
+
+      if (err) {
+  console.log(err);
+
+  return res.status(500).json({
+    error: err.message
+  });
+}
+
+      res.json({
+        success: true
+      });
+
+    }
+  );
+
 });
 
 module.exports = router;

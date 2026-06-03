@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const db = require("../../db");
 const isAuthenticated = require("../../middleware/auth");
+const kycRequired = require("../../middleware/kycRequired");
 
 
 
@@ -29,7 +30,7 @@ router.get("/mine", isAuthenticated, (req, res) => {
 });
 
 // INVESTOR sends interest
-router.post("/", isAuthenticated, (req, res) => {
+router.post("/", isAuthenticated, kycRequired, (req, res) => {
   const investor_id = req.session.user.id;
   const { idea_id, message, amount } = req.body;
 
