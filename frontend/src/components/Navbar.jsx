@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     <nav className={`navbar ${isLanding ? 'navbar-transparent' : ''}`}>
       <div className="navbar-inner">
-        <Link to="/" className="navbar-brand">
+        <Link to="hero" className="navbar-brand">
           <svg className="navbar-logo-icon" viewBox="0 0 32 32" fill="none">
             <circle cx="16" cy="16" r="15" stroke="currentColor" strokeWidth="2"/>
             <path d="M10 22V14h3v8h-3zm5 0V10h3v12h-3zm5 0V16h3v6h-3z" fill="currentColor"/>
@@ -23,7 +23,8 @@ export default function Navbar() {
         <div className="navbar-links">
           {!user && (
             <>
-              <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
+              {/* <Link to="#hero" className={`navbar-link ${location.pathname === '#hero' ? 'active' : ''}`}>Home</Link> */}
+              <a href="#hero" className="navbar-link">Home</a>              
               <a href="#how-it-works" className="navbar-link">How It Works</a>
               <a href="#featured" className="navbar-link">Browse Ideas</a>
             </>

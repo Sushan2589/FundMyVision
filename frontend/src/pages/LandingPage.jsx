@@ -20,7 +20,7 @@ export default function LandingPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="hero">
+      <section className="hero" id="hero">
         <div className="hero-inner">
           <div className="hero-content animate-slide-up">
             <div className="hero-badge">The Future of Crowdfunding</div>
@@ -38,15 +38,15 @@ export default function LandingPage() {
             </div>
             <div className="hero-stats">
               <div className="hero-stat">
-                <span className="hero-stat-number">500+</span>
+                <span className="hero-stat-number">50+</span>
                 <span className="hero-stat-label">Ideas Funded</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-number">$2M+</span>
+                <span className="hero-stat-number">Rs.2L+</span>
                 <span className="hero-stat-label">Total Invested</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-number">1.2K+</span>
+                <span className="hero-stat-number">20+</span>
                 <span className="hero-stat-label">Active Users</span>
               </div>
             </div>
