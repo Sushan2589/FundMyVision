@@ -33,6 +33,7 @@ db.serialize(() => {
       industries TEXT,
       min_investment REAL,
       max_investment REAL,
+      verification_status TEXT DEFAULT 'not_submitted',
 
       FOREIGN KEY (user_id) REFERENCES users(id)
     )

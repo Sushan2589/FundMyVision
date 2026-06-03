@@ -30,4 +30,8 @@ router.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "../pages/ideator/profile.html"));
 });
 
+router.get("/interests", (req, res) => {
+  res.sendFile(path.join(__dirname, "../pages/ideator/interests.html"));
+});
+
 module.exports = router;
