@@ -193,7 +193,7 @@ export default function InvestorBrowse() {
                 />
               </div>
               <div className="input-group">
-                <label htmlFor="interest-amount">Investment Amount ($)</label>
+                <label htmlFor="interest-amount">Investment Amount (Rs.)</label>
                 <input
                   id="interest-amount"
                   type="number"

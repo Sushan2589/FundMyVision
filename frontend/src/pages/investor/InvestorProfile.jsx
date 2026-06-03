@@ -143,7 +143,7 @@ export default function InvestorProfile() {
 
               <div style={{ display: 'flex', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label style={{ display: 'block', fontWeight: 500, marginBottom: 'var(--space-1)' }}>Minimum Ticket ($)</label>
+                  <label style={{ display: 'block', fontWeight: 500, marginBottom: 'var(--space-1)' }}>Minimum Ticket (Rs.)</label>
                   <input
                     type="number"
                     className="form-control"
@@ -154,7 +154,7 @@ export default function InvestorProfile() {
                   />
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label style={{ display: 'block', fontWeight: 500, marginBottom: 'var(--space-1)' }}>Maximum Ticket ($)</label>
+                  <label style={{ display: 'block', fontWeight: 500, marginBottom: 'var(--space-1)' }}>Maximum Ticket (Rs.)</label>
                   <input
                     type="number"
                     className="form-control"
