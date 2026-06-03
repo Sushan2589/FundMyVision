@@ -1,2 +1,0 @@
-# FundMyVision
-PCPS hackathon

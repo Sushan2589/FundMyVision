@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../../components/DashboardLayout';
+import RecommendedIdeas from './RecommendedIdeas';
 import '../ideator/IdeatorPages.css';
 
 export default function InvestorDashboard() {
@@ -121,6 +122,7 @@ export default function InvestorDashboard() {
       </div>
 
       {/* Recent Interests */}
+      <RecommendedIdeas investorId={user?.id} />
       <div className="dashboard-section">
         <div className="dashboard-section-header">
           <h2>Recent Interests</h2>
