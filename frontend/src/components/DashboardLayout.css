@@ -1,0 +1,23 @@
+.dashboard-layout {
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.dashboard-main {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--navbar-height);
+  padding: var(--space-8);
+  min-height: calc(100vh - var(--navbar-height));
+  animation: fadeIn 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    margin-left: 0;
+    padding: var(--space-4);
+  }
+}
+
+.step-number{
+  color: var(--color-primary);
+}

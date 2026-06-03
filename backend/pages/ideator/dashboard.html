@@ -1,0 +1,13 @@
+<h1 id="welcome"></h1>
+<a href="/logout">Logout</a>
+
+<script>
+async function loadUser() {
+  const res = await fetch("/api/sessionData");
+  const user = await res.json();
+  document.getElementById("welcome").innerText =
+    "Welcome " + user.username;
+}
+
+loadUser();
+</script>

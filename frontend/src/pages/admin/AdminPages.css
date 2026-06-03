@@ -1,0 +1,106 @@
+/* Admin Portal Styling */
+
+.admin-container {
+  padding: var(--space-6);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* Data Tables */
+.admin-table-container {
+  background: var(--surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-6);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  background: rgba(7, 83, 39, 0.05);
+  padding: var(--space-4) var(--space-6);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--color-primary-dark);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table td {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tr:hover td {
+  background: rgba(7, 83, 39, 0.02);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: capitalize;
+}
+
+.badge-pending {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid rgba(227, 116, 0, 0.2);
+}
+
+.badge-approved {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(7, 83, 39, 0.2);
+}
+
+.badge-rejected {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border: 1px solid rgba(217, 48, 37, 0.2);
+}
+
+.badge-unsubmitted {
+  background: var(--color-text-muted);
+  color: #fff;
+}
+
+.badge-role {
+  background: rgba(7, 83, 39, 0.08);
+  color: var(--color-primary-dark);
+  font-family: var(--font-mono);
+}
+
+/* Button groups */
+.btn-group {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Empty state */
+.empty-state {
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.empty-state-icon {
+  font-size: var(--text-4xl);
+  margin-bottom: var(--space-4);
+  color: var(--color-primary-light);
+  opacity: 0.5;
+}
