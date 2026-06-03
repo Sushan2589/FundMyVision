@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000',
+      '/recommend': 'http://localhost:8000',
       '/login': 'http://localhost:3000',
       '/signup': 'http://localhost:3000',
       '/logout': 'http://localhost:3000',
