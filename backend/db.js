@@ -14,7 +14,7 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL,
+      username TEXT UNIQUE NOT NULL,
       email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
       role TEXT NOT NULL,
@@ -28,10 +28,10 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS investor_profiles (
       user_id INTEGER PRIMARY KEY,
-      company_name TEXT,
-      bio TEXT,
-      industries TEXT,
-      min_investment REAL,
+      company_name TEXT ,
+      bio TEXT ,
+      industries TEXT ,
+      min_investment REAL ,
       max_investment REAL,
       verification_status TEXT DEFAULT 'not_submitted',
 
@@ -43,9 +43,8 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS ideator_profiles (
       user_id INTEGER PRIMARY KEY,
-      bio TEXT,
-      skills TEXT,
-      location TEXT,
+      bio TEXT NOT NULL,
+      skills TEXT NOT NULL,
 
       FOREIGN KEY (user_id) REFERENCES users(id)
     )

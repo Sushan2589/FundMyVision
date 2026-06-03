@@ -1,0 +1,171 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .card {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Admin Dashboard - KYC Review</h1>
+
+<div id="list"></div>
+
+<script>
+
+async function loadPending() {
+
+  const res = await fetch("/api/admin/kyc/pending");
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(inv => {
+
+    list.innerHTML += `
+      <div class="card">
+        <h3>${inv.company_name || "No Company Name"}</h3>
+        <p><b>Bio:</b> ${inv.bio || ""}</p>
+        <p><b>Industry:</b> ${inv.industry || ""}</p>
+        <p><b>Investment:</b> ${inv.min_investment || 0} - ${inv.max_investment || 0}</p>
+        <p><b>Status:</b> ${inv.verification_status}</p>
+
+        <button onclick="approve(${inv.user_id})">
+          Approve
+        </button>
+
+        <button onclick="reject(${inv.user_id})">
+          Reject
+        </button>
+      </div>
+    `;
+  });
+}
+
+async function approve(id) {
+
+  await fetch("/api/admin/kyc/approve", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ user_id: id })
+  });
+
+  loadPending();
+}
+
+async function reject(id) {
+
+  await fetch("/api/admin/kyc/reject", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ user_id: id })
+  });
+
+  loadPending();
+}
+
+loadPending();
+
+</script>
+
+</body>
+</html> -->
+
+<h1>Admin Dashboard - KYC Review</h1>
+
+<div>
+  <button onclick="setTab('pending')">Pending</button>
+  <button onclick="setTab('approved')">Approved</button>
+  <button onclick="setTab('rejected')">Rejected</button>
+</div>
+
+<hr>
+
+<div id="list"></div>
+
+<script>
+
+let allData = [];
+let currentTab = "pending";
+
+async function loadAll() {
+
+  const res = await fetch("/api/admin/kyc/all");
+  allData = await res.json();
+
+  render();
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  render();
+}
+
+function render() {
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  const filtered = allData.filter(inv =>
+    inv.verification_status === currentTab
+  );
+
+  filtered.forEach(inv => {
+
+    list.innerHTML += `
+      <div class="card">
+        <h3>${inv.company_name || "No Company Name"}</h3>
+        <p><b>Bio:</b> ${inv.bio || ""}</p>
+        <p><b>Industry:</b> ${inv.industry || ""}</p>
+        <p><b>Investment:</b> ${inv.min_investment || 0} - ${inv.max_investment || 0}</p>
+        <p><b>Status:</b> ${inv.verification_status}</p>
+
+        <button onclick="approve(${inv.user_id})">Approve</button>
+        <button onclick="reject(${inv.user_id})">Reject</button>
+      </div>
+    `;
+  });
+}
+
+async function approve(id) {
+
+  await fetch("/api/admin/kyc/approve", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: id })
+  });
+
+  loadAll();
+}
+
+async function reject(id) {
+
+  await fetch("/api/admin/kyc/reject", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: id })
+  });
+
+  loadAll();
+}
+
+loadAll();
+
+</script>

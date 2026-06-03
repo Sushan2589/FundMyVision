@@ -16,5 +16,20 @@
 
 <p>Welcome investor 👋</p>
 
+<script>
+    fetch("/api/sessionData")
+  .then(res => res.json())
+  .then(user => {
+
+    if (
+      user.role === "investor" &&
+      user.verificationStatus !== "approved"
+    ) {
+      window.location.href = "/investor/kyc";
+    }
+
+  });
+</script>
 </body>
 </html>
+
