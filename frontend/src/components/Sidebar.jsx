@@ -5,6 +5,8 @@ const ideatorLinks = [
   { to: '/ideator/dashboard', label: 'Dashboard' },
   { to: '/ideator/ideas', label: 'My Ideas' },
   { to: '/ideator/create-idea', label: 'Post New Idea' },
+  { to: '/ideator/investors', label: 'Interested Investors' },
+  { to: '/chat', label: 'Messages' },
   { to: '/ideator/profile', label: 'My Profile' },
 ];
 
@@ -12,16 +14,25 @@ const investorLinks = [
   { to: '/investor/dashboard', label: 'Dashboard' },
   { to: '/investor/browse', label: 'Browse Ideas' },
   { to: '/investor/interests', label: 'My Interests' },
+  { to: '/chat', label: 'Messages' },
+  { to: '/investor/kyc', label: 'KYC Verification' },
+  { to: '/investor/profile', label: 'My Profile' },
+];
+
+const adminLinks = [
+  { to: '/admin/dashboard', label: 'Dashboard' }
 ];
 
 export default function Sidebar({ role }) {
   const location = useLocation();
-  const links = role === 'ideator' ? ideatorLinks : investorLinks;
+  const links = role === 'admin' ? adminLinks : (role === 'ideator' ? ideatorLinks : investorLinks);
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <span className="sidebar-role-badge">{role === 'ideator' ? 'Ideator' : 'Investor'}</span>
+        <span className="sidebar-role-badge">
+          {role === 'admin' ? 'Admin' : (role === 'ideator' ? 'Ideator' : 'Investor')}
+        </span>
       </div>
       <nav className="sidebar-nav">
         {links.map((link) => (

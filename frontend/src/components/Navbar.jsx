@@ -44,6 +44,11 @@ export default function Navbar() {
               <Link to="/investor/interests" className={`navbar-link ${location.pathname === '/investor/interests' ? 'active' : ''}`}>My Interests</Link>
             </>
           )}
+          {user && user.role === 'admin' && (
+            <>
+              <Link to="/admin/dashboard" className={`navbar-link ${location.pathname === '/admin/dashboard' ? 'active' : ''}`}>Dashboard</Link>
+            </>
+          )}
         </div>
 
         <div className="navbar-actions">

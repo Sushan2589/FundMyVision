@@ -13,6 +13,9 @@ const ideasRoutes = require("./routes/api/ideas");
 const profileRoutes = require("./routes/api/profile");
 const interestsRoutes = require("./routes/api/interests");
 const investorRoutes = require("./routes/investor");
+const kycRoutes = require("./routes/api/kyc");
+const adminRoutes = require("./routes/api/admin");
+const chatRoutes = require("./routes/api/chat");
 
 const app = express();
 
@@ -89,7 +92,8 @@ app.post("/login", (req, res) => {
         id: user.id,
         username: user.username,
         role: user.role,
-        email: user.email
+        email: user.email,
+        verified: user.verified
       };
 
       res.json({
@@ -98,7 +102,8 @@ app.post("/login", (req, res) => {
           id: user.id,
           username: user.username,
           role: user.role,
-          email: user.email
+          email: user.email,
+          verified: user.verified
         }
       });
     }
@@ -120,6 +125,9 @@ app.use("/investor", investorRoutes);
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/interests", interestsRoutes);
+app.use("/api/kyc", kycRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');

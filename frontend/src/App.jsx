@@ -9,9 +9,14 @@ import IdeatorDashboard from './pages/ideator/IdeatorDashboard'
 import IdeatorIdeas from './pages/ideator/IdeatorIdeas'
 import IdeatorCreateIdea from './pages/ideator/IdeatorCreateIdea'
 import IdeatorProfile from './pages/ideator/IdeatorProfile'
+import IdeatorInvestors from './pages/ideator/IdeatorInvestors'
 import InvestorDashboard from './pages/investor/InvestorDashboard'
 import InvestorBrowse from './pages/investor/InvestorBrowse'
 import InvestorInterests from './pages/investor/InvestorInterests'
+import InvestorKYC from './pages/investor/InvestorKYC'
+import InvestorProfile from './pages/investor/InvestorProfile'
+import ChatPage from './pages/ChatPage'
+import AdminDashboard from './pages/admin/AdminDashboard'
 
 function App() {
   const { user, loading } = useAuth()
@@ -49,6 +54,9 @@ function App() {
       <Route path="/ideator/create-idea" element={
         <ProtectedRoute role="ideator"><IdeatorCreateIdea /></ProtectedRoute>
       } />
+      <Route path="/ideator/investors" element={
+        <ProtectedRoute role="ideator"><IdeatorInvestors /></ProtectedRoute>
+      } />
       <Route path="/ideator/profile" element={
         <ProtectedRoute role="ideator"><IdeatorProfile /></ProtectedRoute>
       } />
@@ -62,6 +70,22 @@ function App() {
       } />
       <Route path="/investor/interests" element={
         <ProtectedRoute role="investor"><InvestorInterests /></ProtectedRoute>
+      } />
+      <Route path="/investor/kyc" element={
+        <ProtectedRoute role="investor"><InvestorKYC /></ProtectedRoute>
+      } />
+      <Route path="/investor/profile" element={
+        <ProtectedRoute role="investor"><InvestorProfile /></ProtectedRoute>
+      } />
+
+      {/* Shared Authenticated Routes */}
+      <Route path="/chat" element={
+        <ProtectedRoute><ChatPage /></ProtectedRoute>
+      } />
+
+      {/* Admin Routes */}
+      <Route path="/admin/dashboard" element={
+        <ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>
       } />
 
       {/* Catch-all */}

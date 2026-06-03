@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../../components/DashboardLayout';
 import IdeaCard from '../../components/IdeaCard';
 import '../ideator/IdeatorPages.css';
+import './InvestorPages.css';
 
 export default function InvestorBrowse() {
+  const { user } = useAuth();
   const [ideas, setIdeas] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,6 +78,17 @@ export default function InvestorBrowse() {
         </div>
       </div>
 
+      {/* KYC Warning Banner */}
+      {user?.verified !== 2 && (
+        <div className="kyc-banner animate-slide-up">
+          <div className="kyc-banner-icon">⚠️</div>
+          <div className="kyc-banner-content">
+            <strong>KYC Verification Required</strong>
+            <p>You are viewing dummy ideas. Complete your verification under "KYC Verification" in the sidebar to view real ideas and connect with ideators.</p>
+          </div>
+        </div>
+      )}
+
       {/* Search Bar */}
       <div style={{ marginBottom: 'var(--space-6)' }}>
         <input
@@ -99,12 +113,21 @@ export default function InvestorBrowse() {
               actions={
                 sent.has(idea.id) ? (
                   <span className="badge badge-success">✓ Interest Sent</span>
-                ) : (
+                ) : user?.verified === 2 ? (
                   <button
                     className="btn btn-primary btn-sm"
                     onClick={() => setModalIdea(idea)}
                   >
                     I'm OnBoard
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    disabled
+                    title="KYC Verification required to express interest"
+                    style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                  >
+                    KYC Required
                   </button>
                 )
               }
