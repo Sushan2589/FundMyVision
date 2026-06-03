@@ -11,6 +11,8 @@ SIMILARITY_THRESHOLD = 0.3  # below this, we treat the match as zero
 def semantic_score(text_a: str, text_b: str, max_points: int) -> float:
     """
     Returns a score between 0 and max_points based on how semantically
+ 
+ 
     similar text_a and text_b are. Anything below SIMILARITY_THRESHOLD
     gets zero points so unrelated concepts don't sneak in points.
     """
