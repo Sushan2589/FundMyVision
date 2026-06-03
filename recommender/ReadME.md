@@ -10,7 +10,7 @@ Goto : "https://...:8000/recommend/{investor_id}"
 
 
 For fake data to be populated, execute : python seed.py
-
+Populated data password : 123 for normal and admin123 for admin account.
 
 Returns JSON
 {
