@@ -79,12 +79,12 @@ export default function RecommendedIdeas({ investorId }) {
         <div className="ideas-grid-dashboard">
           {ideas.map((idea, index) => (
             <div key={idea.id} style={{ position: 'relative' }}>
-              <span
+              {/* <span
                 className="badge badge-primary"
                 style={{ position: 'absolute', top: 'var(--space-3)', right: 'var(--space-3)', zIndex: 1 }}
               >
                 #{index + 1}
-              </span>
+              </span> */}
               <IdeaCard idea={idea} />
             </div>
           ))}

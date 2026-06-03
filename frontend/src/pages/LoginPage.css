@@ -188,7 +188,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-5) var(--space-4);
-  background: var(--surface-role-option);
+  
   border: 2px solid var(--color-border);
   border-radius: var(--radius-xl);
   cursor: pointer;
@@ -199,17 +199,13 @@
 
 .role-option:hover {
   border-color: var(--color-primary);
-  background: rgba(7, 83, 39, 0.03);
+  /* background: rgba(7, 83, 39, 0.03); */
   transform: translateY(-2px);
 }
 
 .role-option.selected {
   border-color: var(--color-primary);
-  background: linear-gradient(
-    180deg,
-    rgba(7, 83, 39, 0.08),
-    rgba(211, 250, 153, 0.2)
-  );
+  background: var(--surface-role-option);
 }
 
 .role-option-icon {

@@ -67,13 +67,10 @@ export default function IdeatorInterests() {
   }
 
   function formatCurrency(amount) {
-    if (!amount) return 'Not specified';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
+    if (amount === null || amount === undefined) return 'Not specified';
+    const n = Number(amount);
+    if (Number.isNaN(n)) return 'Not specified';
+    return `Rs.${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
   }
 
   return (

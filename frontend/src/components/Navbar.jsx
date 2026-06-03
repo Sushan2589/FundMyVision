@@ -12,18 +12,15 @@ export default function Navbar() {
     <nav className={`navbar ${isLanding ? 'navbar-transparent' : ''}`}>
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <svg className="navbar-logo-icon" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="15" stroke="currentColor" strokeWidth="2"/>
-            <path d="M10 22V14h3v8h-3zm5 0V10h3v12h-3zm5 0V16h3v6h-3z" fill="currentColor"/>
-            <path d="M8 18l8-10 8 6" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <img src="/favicon.svg" alt="FundMyVision logo" className="navbar-logo-icon" />
           <span className="navbar-brand-text">Fund<span className="navbar-brand-accent">My</span>Vision</span>
         </Link>
 
         <div className="navbar-links">
           {!user && (
             <>
-              <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
+              {/* <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link> */}
+              <a href="#hero" className="navbar-link">Home</a>
               <a href="#how-it-works" className="navbar-link">How It Works</a>
               <a href="#featured" className="navbar-link">Browse Ideas</a>
             </>

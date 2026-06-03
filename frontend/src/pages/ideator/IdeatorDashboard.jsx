@@ -44,7 +44,7 @@ export default function IdeatorDashboard() {
           <div className="stat-icon">Funds</div>
           <div className="stat-info">
             <span className="stat-value">
-              ${totalFunding.toLocaleString()}
+              Rs.{totalFunding.toLocaleString()}
             </span>
             <span className="stat-label">Total Funding Requested</span>
           </div>

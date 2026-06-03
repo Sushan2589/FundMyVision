@@ -20,7 +20,7 @@ export default function LandingPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="hero">
+      <section className="hero" id="hero">
         <div className="hero-inner">
           <div className="hero-content animate-slide-up">
             <div className="hero-badge">The Future of Crowdfunding</div>
@@ -38,15 +38,15 @@ export default function LandingPage() {
             </div>
             <div className="hero-stats">
               <div className="hero-stat">
-                <span className="hero-stat-number">500+</span>
+                <span className="hero-stat-number">50+</span>
                 <span className="hero-stat-label">Ideas Funded</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-number">$2M+</span>
+                <span className="hero-stat-number">Rs.20K+</span>
                 <span className="hero-stat-label">Total Invested</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-number">1.2K+</span>
+                <span className="hero-stat-number">20+</span>
                 <span className="hero-stat-label">Active Users</span>
               </div>
             </div>
@@ -65,25 +65,33 @@ export default function LandingPage() {
             <h2 className="section-title">How It Works</h2>
             <p className="section-subtitle">Three simple steps to bring your vision to life or invest in the future</p>
           </div>
-          <div className="steps-grid">
-            <div className="step-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <div className="step-number">01</div>
-              <div className="step-icon">Idea</div>
-              <h3 className="step-title">Share Your Vision</h3>
-              <p className="step-text">Sign up as an Ideator and post your innovative project idea with funding requirements.</p>
-            </div>
-            <div className="step-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <div className="step-number">02</div>
-              <div className="step-icon">Explore</div>
-              <h3 className="step-title">Discover & Connect</h3>
-              <p className="step-text">Investors browse ideas, analyze potential, and express interest in projects they believe in.</p>
-            </div>
-            <div className="step-card animate-slide-up" style={{ animationDelay: '0.3s' }}>
-              <div className="step-number">03</div>
-              <div className="step-icon">Support</div>
-              <h3 className="step-title">Fund & Grow</h3>
-              <p className="step-text">Ideas get funded, projects get built, and both ideators and investors grow together.</p>
-            </div>
+          <div className="how-steps" role="list" aria-label="How It Works steps">
+            <article className="how-step animate-slide-up" style={{ animationDelay: '0.08s' }} role="listitem">
+              <div className="how-step-badge">01</div>
+              {/* <div className="how-step-icon" aria-hidden>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 11a7 7 0 0 0 14 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div> */}
+              <h3 className="how-step-title">Share Your Vision</h3>
+              <p className="how-step-text">Sign up as an Ideator and post your project with clear funding requirements to attract interested investors.</p>
+            </article>
+
+            <article className="how-step animate-slide-up" style={{ animationDelay: '0.16s' }} role="listitem">
+              <div className="how-step-badge">02</div>
+              {/* <div className="how-step-icon" aria-hidden>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 5v14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div> */}
+              <h3 className="how-step-title">Discover & Connect</h3>
+              <p className="how-step-text">Investors browse and express interest; ideators receive pitches and start private conversations.</p>
+            </article>
+
+            <article className="how-step animate-slide-up" style={{ animationDelay: '0.24s' }} role="listitem">
+              <div className="how-step-badge">03</div>
+              {/* <div className="how-step-icon" aria-hidden>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 4v12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div> */}
+              <h3 className="how-step-title">Fund & Grow</h3>
+              <p className="how-step-text">Once offers are accepted, projects get funded and teams scale — with messaging and collaboration built in.</p>
+            </article>
           </div>
         </div>
       </section>

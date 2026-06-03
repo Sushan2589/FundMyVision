@@ -170,7 +170,7 @@ export default function IdeatorEditIdea() {
             </div>
 
             <div className="input-group">
-              <label htmlFor="idea-funding">Funding Needed ($)</label>
+              <label htmlFor="idea-funding">Funding Needed (Rs.)</label>
               <input
                 id="idea-funding"
                 type="number"
