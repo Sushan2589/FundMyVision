@@ -33,7 +33,7 @@ export default function InvestorInterests() {
                 <div className="interest-message">{interest.message}</div>
                 <div className="interest-meta">
                   <span className="interest-amount">
-                    ${(interest.amount || 0).toLocaleString()}
+                    Rs.{(interest.amount || 0).toLocaleString()}
                   </span>
                   <span className={`badge ${
                     interest.status === 'pending' ? 'badge-warning' : 

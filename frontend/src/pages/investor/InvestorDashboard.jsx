@@ -115,7 +115,7 @@ export default function InvestorDashboard() {
         <div className="stat-card">
           <div className="stat-icon">Funds</div>
           <div className="stat-info">
-            <span className="stat-value">${totalInvested.toLocaleString()}</span>
+            <span className="stat-value">Rs.{totalInvested.toLocaleString()}</span>
             <span className="stat-label">Total Offered</span>
           </div>
         </div>
